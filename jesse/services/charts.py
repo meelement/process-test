@@ -75,13 +75,16 @@ def portfolio_vs_asset_returns() -> None:
             continue
 
         if t.type == 'long':
-            if str(int(t.opened_at)) in price_dict[key]['indexes']:   #only generate data point if this trade wasn't after the last candle (open position at end)
-                # add price change%
-                buy_y.append(
-                    price_dict[key]['prices'][price_dict[key]['indexes'][str(int(t.opened_at))]]
-                )
-                # add datetime
-                buy_x.append(datetime.fromtimestamp(t.opened_at / 1000))
+
+            #Open
+            # add price change%
+            buy_y.append(
+                price_dict[key]['prices'][price_dict[key]['indexes'][str(int(t.opened_at))]]
+            )
+            # add datetime
+            buy_x.append(datetime.fromtimestamp(t.opened_at / 1000))
+
+            #Close
             if str(int(t.closed_at)) in price_dict[key]['indexes']:   #only generate data point if this trade wasn't after the last candle (open position at end)
                 # add price change%
                 sell_y.append(
@@ -89,7 +92,10 @@ def portfolio_vs_asset_returns() -> None:
                 )
                 # add datetime
                 sell_x.append(datetime.fromtimestamp(t.closed_at / 1000))
+
         elif t.type == 'short':
+
+            #close
             if str(int(t.closed_at)) in price_dict[key]['indexes']:   #only generate data point if this trade wasn't after the last candle (open position at end)
                 # add price change%
                 buy_y.append(
@@ -97,13 +103,14 @@ def portfolio_vs_asset_returns() -> None:
                 )
                 # add datetime
                 buy_x.append(datetime.fromtimestamp(t.closed_at / 1000))
-            if str(int(t.opened_at)) in price_dict[key]['indexes']:   #only generate data point if this trade wasn't after the last candle (open position at end)
-                # add price change%
-                sell_y.append(
-                    price_dict[key]['prices'][price_dict[key]['indexes'][str(int(t.opened_at))]]
-                )
-                # add datetime
-                sell_x.append(datetime.fromtimestamp(t.opened_at / 1000))
+
+            #Open
+            # add price change%
+            sell_y.append(
+                price_dict[key]['prices'][price_dict[key]['indexes'][str(int(t.opened_at))]]
+            )
+            # add datetime
+            sell_x.append(datetime.fromtimestamp(t.opened_at / 1000))
 
     plt.plot(buy_x, np.array(buy_y) * 0.99, '^', color='blue', markersize=7)
     plt.plot(sell_x, np.array(sell_y) * 1.01, 'v', color='red', markersize=7)
